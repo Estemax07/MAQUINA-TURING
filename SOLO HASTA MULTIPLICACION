@@ -1,0 +1,45 @@
+import math
+
+class MaquinaTuring:
+    def __init__(self, tape, transitions, initial_state, halt_state):
+        self.tape = list(tape)
+        self.head = 0
+        self.state = initial_state
+        self.transitions = transitions
+        self.halt_state = halt_state
+    
+    def step(self):
+        symbol = self.tape[self.head] if self.head < len(self.tape) else ' '
+        key = (self.state, symbol)
+        
+        if key in self.transitions:
+            write, move, next_state = self.transitions[key]
+            
+            if self.head < len(self.tape):
+                self.tape[self.head] = write
+            else:
+                self.tape.append(write)
+            
+            self.head += 1 if move == 'R' else -1 if move == 'L' else 0
+            self.state = next_state
+        
+    def run(self):
+        while self.state != self.halt_state:
+            self.step()
+    
+    def get_tape(self):
+        return ''.join(self.tape).strip()
+
+# Funciones para operaciones matemáticas
+def add(a, b): return a + b
+def subtract(a, b): return a - b
+def multiply(a, b): return a * b
+
+# Solicitar entrada del usuario
+num1 = int(input("Ingrese el primer número: "))
+num2 = int(input("Ingrese el segundo número: "))
+
+# Mostrar resultados
+print("Suma:", add(num1, num2))
+print("Resta:", subtract(num1, num2))
+print("Multiplicación:", multiply(num1, num2))
