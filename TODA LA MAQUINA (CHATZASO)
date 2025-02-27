@@ -1,0 +1,63 @@
+import math
+
+class MaquinaTuring:
+    def __init__(self, tape, transitions, initial_state, halt_state):
+        self.tape = list(tape)
+        self.head = 0
+        self.state = initial_state
+        self.transitions = transitions
+        self.halt_state = halt_state
+    
+    def step(self):
+        symbol = self.tape[self.head] if self.head < len(self.tape) else ' '
+        key = (self.state, symbol)
+        
+        if key in self.transitions:
+            write, move, next_state = self.transitions[key]
+            
+            if self.head < len(self.tape):
+                self.tape[self.head] = write
+            else:
+                self.tape.append(write)
+            
+            self.head += 1 if move == 'R' else -1 if move == 'L' else 0
+            self.state = next_state
+        
+    def run(self):
+        while self.state != self.halt_state:
+            self.step()
+    
+    def get_tape(self):
+        return ''.join(self.tape).strip()
+
+# Funciones para operaciones matemáticas
+def add(a, b): return a + b
+def subtract(a, b): return a - b
+def multiply(a, b): return a * b
+def divide(a, b): return a / b if b != 0 else 'Error'
+def sqrt(a): return math.sqrt(a)
+def power(a, b): return math.pow(a, b)
+def log(a): return math.log(a) if a > 0 else 'Error'
+def sin(a): return math.sin(a)
+
+# Definición de transiciones para la suma (ejemplo con binario)
+transitions = {
+    ('q0', '1'): ('1', 'R', 'q0'),
+    ('q0', '+'): (' ', 'R', 'q1'),
+    ('q1', '1'): ('1', 'R', 'q1'),
+    ('q1', ' '): ('1', 'L', 'halt')
+}
+
+tape = input("Ingrese la operación en formato binario (ejemplo: 111+11): ")  # Representa 3+2 en binario
+machine = MaquinaTuring(tape, transitions, 'q0', 'halt')
+machine.run()
+print("Resultado Suma:", machine.get_tape())
+
+# Ejemplo de otras operaciones
+print("Resta:", subtract(int(input("Ingrese el primer número para restar: ")), int(input("Ingrese el segundo número para restar: "))))
+print("Multiplicación:", multiply(int(input("Ingrese el primer número para multiplicar: ")), int(input("Ingrese el segundo número para multiplicar: "))))
+print("División:", divide(int(input("Ingrese el dividendo: ")), int(input("Ingrese el divisor: "))))
+print("Raíz Cuadrada:", sqrt(float(input("Ingrese un número para calcular la raíz cuadrada: "))))
+print("Potenciación:", power(float(input("Ingrese la base: ")), float(input("Ingrese el exponente: "))))
+print("Logaritmo:", log(float(input("Ingrese un número para calcular el logaritmo: "))))
+print("Seno:", sin(float(input("Ingrese un ángulo en radianes para calcular el seno: "))))
